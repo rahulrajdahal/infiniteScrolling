@@ -1,11 +1,20 @@
 import React from 'react';
 import {Text, View} from 'react-native';
+import styled from 'styled-components/native';
+import tw from 'tailwind-react-native-classnames';
+
+const Container = styled.View`
+  ${tw`
+  
+  `};
+`;
 
 function App() {
   return (
-    <View>
+    <Container>
       <Text>App Typescript</Text>
-    </View>
+      <Text>New line Typescript</Text>
+    </Container>
   );
 }
 
