@@ -1,20 +1,14 @@
 import React from 'react';
-import {Text, View} from 'react-native';
-import styled from 'styled-components/native';
-import tw from 'tailwind-react-native-classnames';
+import {Provider} from 'react-redux';
 
-const Container = styled.View`
-  ${tw`
-  
-  `};
-`;
+import {store} from 'app/store';
+import Posts from 'screens/Posts';
 
 function App() {
   return (
-    <Container>
-      <Text>App Typescript</Text>
-      <Text>New line Typescript</Text>
-    </Container>
+    <Provider store={store}>
+      <Posts />
+    </Provider>
   );
 }
 
