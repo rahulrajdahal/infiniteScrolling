@@ -1,4 +1,10 @@
-import React, {Dispatch, DispatchWithoutAction, memo, useState} from 'react';
+import React, {
+  Dispatch,
+  DispatchWithoutAction,
+  memo,
+  useEffect,
+  useState,
+} from 'react';
 import {FlatList, View} from 'react-native';
 import {connect, RootStateOrAny} from 'react-redux';
 import styled from 'styled-components/native';
@@ -10,6 +16,8 @@ import {GET_POSTS_LOADING} from 'features/posts/action';
 import {colors} from 'theme';
 import {PostType} from 'features/posts/types';
 import {IPostProps} from 'components/cards/Post';
+import {bindActionCreators} from 'redux';
+import {AppDispatch} from 'app/store';
 
 const Container = styled.View`
   ${tw`
@@ -39,9 +47,9 @@ const Eclipse = styled.View`
   background: ${colors.grey200};
 `;
 
-type PostScreenType = {posts?: PostType | null};
+type PostScreenType = {posts?: PostType | null; actions: any};
 
-function PostScreen({posts}: PostScreenType) {
+function PostScreen({posts, actions}: PostScreenType) {
   const [limit, setLimit] = useState<number>(5);
 
   const onEndReached = () => setLimit(limit + 5);
@@ -74,6 +82,11 @@ function PostScreen({posts}: PostScreenType) {
   return (
     <FlatList
       ListHeaderComponent={header}
+      refreshing={posts?.loading ? true : false}
+      onRefresh={() => {
+        actions.getPosts();
+        <PostSkeletonCard />;
+      }}
       stickyHeaderIndices={[0]}
       data={posts?.loading ? Array.from(Array(5)) : posts?.data.slice(0, limit)}
       renderItem={posts?.loading ? loadingItem : renderItem}
@@ -90,7 +103,13 @@ const mapStateToProps = (state: RootStateOrAny) => {
   return {posts: state.posts};
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) =>
+const mapDispatchToProps = (dispatch: AppDispatch): any => {
+  const getPosts = () => ({type: GET_POSTS_LOADING});
   dispatch({type: GET_POSTS_LOADING});
+
+  return {
+    actions: bindActionCreators({getPosts}, dispatch),
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostScreen as any);
