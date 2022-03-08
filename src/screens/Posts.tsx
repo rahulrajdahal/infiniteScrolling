@@ -65,14 +65,18 @@ function PostScreen({posts}: PostScreenType) {
     </View>
   );
 
-  return posts?.loading ? (
-    Array.from(Array(5), (_, i) => <PostSkeletonCard key={i} />)
-  ) : (
+  const loadingItem = () => (
+    <View style={{paddingHorizontal: 16}}>
+      <PostSkeletonCard />
+    </View>
+  );
+
+  return (
     <FlatList
       ListHeaderComponent={header}
       stickyHeaderIndices={[0]}
-      data={posts?.data.slice(0, limit)}
-      renderItem={renderItem}
+      data={posts?.loading ? Array.from(Array(5)) : posts?.data.slice(0, limit)}
+      renderItem={posts?.loading ? loadingItem : renderItem}
       keyExtractor={(_, index) => String(index)}
       showsVerticalScrollIndicator={false}
       onEndReachedThreshold={0.7}
