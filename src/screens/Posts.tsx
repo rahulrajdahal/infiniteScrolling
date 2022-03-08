@@ -1,13 +1,14 @@
-import {Logo} from 'assets/icons';
 import React, {useState} from 'react';
 import {FlatList, View} from 'react-native';
-import {connect} from 'react-redux';
+import {connect, MapStateToProps} from 'react-redux';
 import styled from 'styled-components/native';
 import tw from 'tailwind-react-native-classnames';
 
+import {Logo} from 'assets/icons';
 import {PostCard, PostSkeletonCard} from 'components';
 import {GET_POSTS_LOADING} from 'features/posts/action';
 import {colors} from 'theme';
+import {PostType} from 'features/posts/types';
 
 const Container = styled.View`
   ${tw`
@@ -37,7 +38,7 @@ const Eclipse = styled.View`
   background: ${colors.grey200};
 `;
 
-type PostScreenType = {posts?: any | null};
+type PostScreenType = {posts?: PostType | null};
 
 function PostScreen({posts}: PostScreenType) {
   const [limit, setLimit] = useState<number>(5);
@@ -56,23 +57,25 @@ function PostScreen({posts}: PostScreenType) {
     </Container>
   );
 
-  return posts.loading ? (
+  const footer = () => (
+    <View style={{backgroundColor: colors.white, paddingHorizontal: 16}}>
+      <PostSkeletonCard />
+    </View>
+  );
+
+  return posts?.loading ? (
     Array.from(Array(5), (_, i) => <PostSkeletonCard key={i} />)
   ) : (
     <FlatList
       ListHeaderComponent={header}
       stickyHeaderIndices={[0]}
-      data={posts.data.slice(0, limit)}
+      data={posts?.data.slice(0, limit)}
       renderItem={renderItem}
       keyExtractor={(_, index) => String(index)}
       showsVerticalScrollIndicator={false}
       onEndReachedThreshold={0.7}
       onEndReached={onEndReached}
-      ListFooterComponent={
-        <View style={{backgroundColor: colors.white}}>
-          <PostSkeletonCard />
-        </View>
-      }
+      ListFooterComponent={footer}
     />
   );
 }

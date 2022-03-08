@@ -1,8 +1,8 @@
-import {image1, image2, image3, image4} from 'assets/images';
 import React from 'react';
-import {Image, Text} from 'react-native';
 import styled from 'styled-components/native';
 import tw from 'tailwind-react-native-classnames';
+
+import {image1, image2, image3, image4} from 'assets/images';
 import {colors, fonts} from 'theme';
 
 const Container = styled.View`
@@ -65,8 +65,8 @@ const FooterTextBold = styled.Text`
   font-weight: 700;
 `;
 
-type PostType = {title: string; body: string; id: number; userId: number};
-type IPostCardProps = {post: PostType};
+export type IPostProps = {title: string; body: string; id: number; userId: number};
+type IPostCardProps = {post: IPostProps};
 
 function PostCard({post}: IPostCardProps) {
   const getImage = () => {

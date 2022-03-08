@@ -3,8 +3,9 @@ import {
   GET_POSTS_LOADING,
   GET_POSTS_SUCCESS,
 } from './action';
+import {PostType} from './types';
 
-const initialState = {data: [], loading: false, error: false};
+const initialState: PostType = {data: [], loading: false, error: false};
 
 const postReducer = (state = initialState, action: any) => {
   switch (action.type) {
