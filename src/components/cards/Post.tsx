@@ -35,7 +35,7 @@ const Title = styled.Text`
 const Body = styled.Text`
   ${fonts.body};
   ${tw`
-  mb-3
+    mb-3 
   `}
 `;
 
