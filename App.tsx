@@ -1,14 +1,18 @@
 import React, {useEffect} from 'react';
-import {Provider, useDispatch} from 'react-redux';
+import {Provider} from 'react-redux';
+import SplashScreen from 'react-native-splash-screen';
 
 import {store} from 'app/store';
-import Posts from 'screens/Posts';
-import {GET_POSTS_LOADING} from 'features/posts/action';
+import PostScreen from 'screens/Posts';
 
 function App() {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
   return (
     <Provider store={store}>
-      <Posts />
+      <PostScreen />
     </Provider>
   );
 }

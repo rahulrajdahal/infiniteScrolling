@@ -14,6 +14,7 @@ const api = new Api();
 function* getPostsAsync() {
   try {
     const res: SagaReturnType<any> = yield call(api.getPosts);
+
     yield put({type: GET_POSTS_SUCCESS, payload: res});
   } catch (error) {
     console.log(error);

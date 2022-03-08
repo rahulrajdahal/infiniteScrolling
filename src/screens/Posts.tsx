@@ -1,12 +1,13 @@
 import {Logo} from 'assets/icons';
-import {PostCard, PostSkeletonCard} from 'components';
-import {GET_POSTS_LOADING} from 'features/posts/action';
-import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import React from 'react';
+import {FlatList, View} from 'react-native';
+import {connect} from 'react-redux';
 import styled from 'styled-components/native';
 import tw from 'tailwind-react-native-classnames';
-import {colors, sizes} from 'theme';
+
+import {PostCard, PostSkeletonCard} from 'components';
+import {GET_POSTS_LOADING} from 'features/posts/action';
+import {colors} from 'theme';
 
 const Container = styled.View`
   ${tw`
@@ -35,30 +36,10 @@ const Eclipse = styled.View`
 `};
   background: ${colors.grey200};
 `;
-function Posts() {
-  const dispatch = useDispatch();
-  const postState = useSelector((state: any) => state.posts);
 
-  const [posts, setPosts] = useState<any>(postState.data);
-  useEffect(() => {
-    try {
-      getPosts();
-    } catch (e) {
-      console.log('effect', e);
-    }
-  }, []);
+type PostScreenType = {posts?: any | null};
 
-  console.log(posts[0]);
-
-  const getPosts = () => {
-    dispatch({type: GET_POSTS_LOADING});
-    setPosts([...posts, postState.data]);
-  };
-
-  const onEndReached = () => {
-    dispatch({type: GET_POSTS_LOADING});
-  };
-
+function PostScreen({posts}: PostScreenType) {
   const header = () => (
     <HeaderContainer>
       <Logo />
@@ -71,28 +52,31 @@ function Posts() {
     </Container>
   );
 
-  return (
-    // <FlatList
-    //   ListHeaderComponent={header}
-    //   stickyHeaderIndices={[0]}
-    //   data={posts}
-    //   renderItem={renderItem}
-    //   keyExtractor={(_, index) => String(index)}
-    //   showsVerticalScrollIndicator={false}
-    //   onEndReached={onEndReached}
-    //   onEndReachedThreshold={0}
-    //   ListFooterComponent={
-    //     <View style={{backgroundColor: colors.white}}>
-    //       <ActivityIndicator />
-    //     </View>
-    //   }
-    // />
-    <>
-      <PostSkeletonCard />
-      <PostSkeletonCard />
-      <PostSkeletonCard />
-    </>
+  return posts.loading ? (
+    Array.from(Array(5), (_, i) => <PostSkeletonCard key={i} />)
+  ) : (
+    <FlatList
+      ListHeaderComponent={header}
+      stickyHeaderIndices={[0]}
+      data={posts.data}
+      renderItem={renderItem}
+      keyExtractor={(_, index) => String(index)}
+      showsVerticalScrollIndicator={false}
+      onEndReachedThreshold={0}
+      ListFooterComponent={
+        <View style={{backgroundColor: colors.white}}>
+          <PostSkeletonCard />
+        </View>
+      }
+    />
   );
 }
 
-export default Posts;
+const mapStateToProps = (state: any) => {
+  return {posts: state.posts};
+};
+
+const mapDispatchToProps = (dispatch: any) =>
+  dispatch({type: GET_POSTS_LOADING});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostScreen as any);
