@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {Dispatch, DispatchWithoutAction, memo, useState} from 'react';
 import {FlatList, View} from 'react-native';
-import {connect, MapStateToProps} from 'react-redux';
+import {connect, RootStateOrAny} from 'react-redux';
 import styled from 'styled-components/native';
 import tw from 'tailwind-react-native-classnames';
 
@@ -9,6 +9,7 @@ import {PostCard, PostSkeletonCard} from 'components';
 import {GET_POSTS_LOADING} from 'features/posts/action';
 import {colors} from 'theme';
 import {PostType} from 'features/posts/types';
+import {IPostProps} from 'components/cards/Post';
 
 const Container = styled.View`
   ${tw`
@@ -51,6 +52,7 @@ function PostScreen({posts}: PostScreenType) {
       <Eclipse />
     </HeaderContainer>
   );
+
   const renderItem = ({item}: any) => (
     <Container>
       <PostCard post={item} />
@@ -80,11 +82,11 @@ function PostScreen({posts}: PostScreenType) {
   );
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: RootStateOrAny) => {
   return {posts: state.posts};
 };
 
-const mapDispatchToProps = (dispatch: any) =>
+const mapDispatchToProps = (dispatch: Dispatch<any>) =>
   dispatch({type: GET_POSTS_LOADING});
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostScreen as any);

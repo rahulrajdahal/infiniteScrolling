@@ -65,7 +65,12 @@ const FooterTextBold = styled.Text`
   font-weight: 700;
 `;
 
-export type IPostProps = {title: string; body: string; id: number; userId: number};
+export type IPostProps = {
+  title: string;
+  body: string;
+  id: number;
+  userId: number;
+};
 type IPostCardProps = {post: IPostProps};
 
 function PostCard({post}: IPostCardProps) {
