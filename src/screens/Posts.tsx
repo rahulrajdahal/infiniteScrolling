@@ -1,5 +1,5 @@
 import {Logo} from 'assets/icons';
-import React from 'react';
+import React, {useState} from 'react';
 import {FlatList, View} from 'react-native';
 import {connect} from 'react-redux';
 import styled from 'styled-components/native';
@@ -40,6 +40,10 @@ const Eclipse = styled.View`
 type PostScreenType = {posts?: any | null};
 
 function PostScreen({posts}: PostScreenType) {
+  const [limit, setLimit] = useState<number>(5);
+
+  const onEndReached = () => setLimit(limit + 5);
+
   const header = () => (
     <HeaderContainer>
       <Logo />
@@ -58,11 +62,12 @@ function PostScreen({posts}: PostScreenType) {
     <FlatList
       ListHeaderComponent={header}
       stickyHeaderIndices={[0]}
-      data={posts.data}
+      data={posts.data.slice(0, limit)}
       renderItem={renderItem}
       keyExtractor={(_, index) => String(index)}
       showsVerticalScrollIndicator={false}
-      onEndReachedThreshold={0}
+      onEndReachedThreshold={0.7}
+      onEndReached={onEndReached}
       ListFooterComponent={
         <View style={{backgroundColor: colors.white}}>
           <PostSkeletonCard />
