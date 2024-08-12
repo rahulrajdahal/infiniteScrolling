@@ -1,17 +1,21 @@
 import React, {useEffect} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import SplashScreen from 'react-native-splash-screen';
+import {HomeScreen} from './src/screens';
 
 const App = () => {
+  const queryClient = new QueryClient();
+
   useEffect(() => {
     SplashScreen.hide();
   }, []);
 
   return (
-    <View>
-      <Text>App</Text>
-    </View>
+    <QueryClientProvider client={queryClient}>
+      <HomeScreen />
+    </QueryClientProvider>
   );
 };
 
