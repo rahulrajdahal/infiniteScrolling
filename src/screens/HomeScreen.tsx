@@ -1,6 +1,6 @@
 import {useInfiniteQuery, useQueries} from '@tanstack/react-query';
-import React, {useMemo, useState} from 'react';
-import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
+import React, {useMemo, useRef, useState} from 'react';
+import {FlatList, SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import {colors, sizes} from '../../assets/themes';
 import {
   CardSkeleton,
@@ -98,10 +98,14 @@ const HomeScreen = () => {
     refetch();
   };
 
+  const postListRef: React.LegacyRef<FlatList<any>> = useRef(null);
+
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar />
       {hasPreviousPage && isFetchingPreviousPage && <CardSkeleton />}
       <FlatList
+        ref={postListRef}
         data={posts?.pages.flat()}
         renderItem={({item}) =>
           postsLoading || isLoading || usersIsLoading ? (
@@ -119,7 +123,7 @@ const HomeScreen = () => {
             ? i.toPrecision()
             : item.id
         }
-        ListHeaderComponent={<Header />}
+        ListHeaderComponent={<Header postListRef={postListRef} />}
         stickyHeaderIndices={[0]}
         ItemSeparatorComponent={renderSeparator}
         showsVerticalScrollIndicator={false}

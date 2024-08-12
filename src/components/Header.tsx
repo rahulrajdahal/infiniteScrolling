@@ -1,12 +1,24 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {LogoIcon, MenuIcon} from '../../assets/icons';
 import {colors, sizes} from '../../assets/themes';
 
-const Header = () => {
+interface HeaderProps {
+  postListRef: React.RefObject<FlatList<any>>;
+}
+
+const Header = ({postListRef}: HeaderProps) => {
   return (
     <View style={styles.container}>
-      <LogoIcon />
+      <TouchableOpacity
+        onPress={() =>
+          postListRef.current?.scrollToIndex({
+            index: 0,
+            viewOffset: sizes.appHeight(8),
+          })
+        }>
+        <LogoIcon />
+      </TouchableOpacity>
       <MenuIcon />
     </View>
   );
