@@ -23,7 +23,7 @@ const HomeScreen = () => {
 
   const renderSeparator = () => <PostSeparator />;
 
-  const [{data, isLoading}, {data: users, isLoading: usersIsLoading}] =
+  const [{data, isLoading, refetch}, {data: users, isLoading: usersIsLoading}] =
     useQueries({
       queries: [
         {
@@ -64,19 +64,20 @@ const HomeScreen = () => {
     isFetchingPreviousPage,
     hasNextPage,
     hasPreviousPage,
-    refetch,
-    isRefetching,
   } = useInfiniteQuery({
-    queryKey: ['posts', postData],
+    queryKey: ['posts', data, users],
     queryFn: ({pageParam}) => {
       return postData.slice(pageParam.offset, pageParam.limit);
     },
     initialPageParam: pageParams,
-    maxPages: 10,
     getNextPageParam: () =>
-      pageParams.limit < 100 && pageParams.limit > 10 ? pageParams : undefined,
+      pageParams.limit < 100 && pageParams.limit > 10
+        ? {limit: pageParams.limit + 10, offset: pageParams.offset + 10}
+        : undefined,
     getPreviousPageParam: () =>
-      pageParams.limit > 10 ? pageParams : undefined,
+      pageParams.limit > 10 && pageParams.limit < 100
+        ? {limit: pageParams.limit - 10, offset: pageParams.offset - 10}
+        : undefined,
   });
 
   const handleOnEndReached = () => {
@@ -91,29 +92,24 @@ const HomeScreen = () => {
     fetchNextPage();
   };
 
-  const handleOnRefresh = () => {
-    setPageParams({offset: 0, limit: 10});
-    refetch();
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       {hasPreviousPage && isFetchingPreviousPage && <CardSkeleton />}
       <FlatList
-        refreshing={postsLoading || isRefetching || isLoading || usersIsLoading}
-        onRefresh={handleOnRefresh}
         data={posts?.pages.flat()}
         renderItem={({item}) =>
-          !postsLoading || isRefetching || isLoading || usersIsLoading ? (
+          postsLoading || isLoading || usersIsLoading ? (
             <CardSkeleton />
           ) : (
             <PostComponent post={item} />
           )
         }
+        refreshing={postsLoading || isLoading || usersIsLoading}
+        onRefresh={refetch}
         onEndReachedThreshold={0.7}
         onEndReached={handleOnEndReached}
         keyExtractor={(item, i) =>
-          postsLoading || isRefetching || isLoading || usersIsLoading
+          postsLoading || isLoading || usersIsLoading
             ? i.toPrecision()
             : item.id
         }
