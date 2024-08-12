@@ -23,7 +23,7 @@ const HomeScreen = () => {
 
   const renderSeparator = () => <PostSeparator />;
 
-  const [{data, isLoading, refetch}, {data: users, isLoading: usersIsLoading}] =
+  const [{data, isLoading}, {data: users, isLoading: usersIsLoading}] =
     useQueries({
       queries: [
         {
@@ -64,6 +64,7 @@ const HomeScreen = () => {
     isFetchingPreviousPage,
     hasNextPage,
     hasPreviousPage,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ['posts', data, users],
     queryFn: ({pageParam}) => {
@@ -92,6 +93,11 @@ const HomeScreen = () => {
     fetchNextPage();
   };
 
+  const handleOnRefetch = () => {
+    setPageParams({limit: 10, offset: 0});
+    refetch();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {hasPreviousPage && isFetchingPreviousPage && <CardSkeleton />}
@@ -105,7 +111,7 @@ const HomeScreen = () => {
           )
         }
         refreshing={postsLoading || isLoading || usersIsLoading}
-        onRefresh={refetch}
+        onRefresh={handleOnRefetch}
         onEndReachedThreshold={0.7}
         onEndReached={handleOnEndReached}
         keyExtractor={(item, i) =>
