@@ -39,8 +39,7 @@ yarn ios
 ## Preview
 
 <a href="https://github.com/rahulrajdahal/infiniteScrolling">
-<img src="./screenshots/splash.png?raw=true" width="375" height="812" alt='infinite scoller - splash' /></a> <img src="./screenshots/loading.jpg?raw=true" width="375" height="812" alt='infinite scoller - loading' />
-<img src="./screenshots/home.jpg?raw=true" width="375" height="812" alt='infinite scoller - home' />
+<img src="./screenshots/Splash.png?raw=true" width="375" height="812" alt='infinite scoller - splash' /></a> <img src="./screenshots/loading.jpg?raw=true" width="375" height="812" alt='infinite scoller - loading' /> <img src="./screenshots/home.jpg?raw=true" width="375" height="812" alt='infinite scoller - home' />
 
 ## 🚀 Project Structure
 
